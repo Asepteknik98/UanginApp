@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Financial App</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CHART -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="bg-circle one"></div>
+  <div class="bg-circle two"></div>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+
+      <div>
+        <h1>Financial App</h1>
+        <p>Kelola keuangan pribadi</p>
+      </div>
+
+      <div class="profile">
+        Asep
+      </div>
+
+    </header>
+
+    <!-- BALANCE CARD -->
+    <section class="main-balance">
+
+      <p>Total Saldo</p>
+
+      <h2 id="balance">
+        Rp 0
+      </h2>
+
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="summary">
+
+      <div class="card income">
+
+        <h3>Pemasukan</h3>
+
+        <h2 id="totalIncome">
+          Rp 0
+        </h2>
+
+      </div>
+
+      <div class="card expense">
+
+        <h3>Pengeluaran</h3>
+
+        <h2 id="totalExpense">
+          Rp 0
+        </h2>
+
+      </div>
+
+    </section>
+
+    <!-- CHART -->
+    <section class="chart-card">
+
+      <div class="title-row">
+
+        <h2>Statistik</h2>
+
+      </div>
+
+      <canvas id="financeChart"></canvas>
+
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-box">
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Cari transaksi...">
+
+    </section>
+
+    <!-- TRANSACTION -->
+    <section class="transaction-section">
+
+      <div class="title-row">
+
+        <h2>Riwayat Transaksi</h2>
+
+      </div>
+
+      <div id="transactionList"
+           class="transaction-list">
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- FLOATING BUTTON -->
+  <button class="floating-btn"
+          onclick="openModal()">
+
+    ＋
+
+  </button>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h2>Tambah Transaksi</h2>
+
+        <button class="close-btn"
+                onclick="closeModal()">
+          ✕
+        </button>
+
+      </div>
+
+      <form id="transactionForm">
+
+        <div class="input-group">
+
+          <label>Keterangan</label>
+
+          <input type="text"
+                 id="description"
+                 required>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Jumlah</label>
+
+          <input type="number"
+                 id="amount"
+                 required>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Kategori</label>
+
+          <select id="category">
+
+            <option>Makanan</option>
+            <option>Transportasi</option>
+            <option>Belanja</option>
+            <option>Tagihan</option>
+            <option>Gaji</option>
+            <option>Hiburan</option>
+
+          </select>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Tipe</label>
+
+          <select id="type">
+
+            <option value="income">
+              Pemasukan
+            </option>
+
+            <option value="expense">
+              Pengeluaran
+            </option>
+
+          </select>
+
+        </div>
+
+        <button type="submit"
+                class="save-btn">
+
+          Simpan Transaksi
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+
+    <button class="nav-item active">
+      🏠
+      <span>Home</span>
+    </button>
+
+    <button class="nav-item">
+      📊
+      <span>Chart</span>
+    </button>
+
+    <button class="nav-item">
+      💰
+      <span>Money</span>
+    </button>
+
+    <button class="nav-item">
+      ⚙️
+      <span>Setting</span>
+    </button>
+
+  </nav>
+
+<script src="js/storage.js"></script>
+<script src="js/transaction.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
