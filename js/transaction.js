@@ -1,25 +1,11 @@
-class Transaction{
-
-  constructor(
-    description,
-    amount,
-    category,
-    type
-  ){
-
-    this.id = Date.now();
-
+class Transaction {
+  constructor(description, amount, category, type, date = null) {
+    this.id = Date.now() + Math.random();
     this.description = description;
-
-    this.amount = parseInt(amount);
-
+    this.amount = parseFloat(amount);
     this.category = category;
-
     this.type = type;
-
-    this.date = new Date()
-      .toLocaleDateString("id-ID");
-
+    this.date = date || new Date().toISOString().split('T')[0];
+    this.createdAt = new Date().getTime();
   }
-
 }

@@ -1,243 +1,320 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-  <title>Financial App</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial App - Kelola Keuangan Pribadi</title>
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- CHART -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-
 <body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-content">
+      <h1>💰 Financial App</h1>
+      <p>Kelola keuangan pribadi</p>
+    </div>
+  </div>
 
   <!-- BACKGROUND -->
   <div class="bg-circle one"></div>
   <div class="bg-circle two"></div>
 
-  <div class="container">
-
-    <!-- HEADER -->
-    <header>
-
-      <div>
-        <h1>Financial App</h1>
-        <p>Kelola keuangan pribadi</p>
-      </div>
-
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <h1>Financial App</h1>
+      <p id="headerSubtitle">Kelola keuangan pribadi</p>
+    </div>
+    <div class="header-right">
+      <button id="themeToggle" class="theme-toggle" title="Toggle tema">🌙</button>
       <div class="profile">
-        Asep
+        <div class="profile-avatar" id="profileAvatar">A</div>
+        <div class="profile-name" id="profileName">Asep</div>
       </div>
+    </div>
+  </header>
 
-    </header>
+  <!-- MAIN CONTAINER -->
+  <div class="main-container">
 
-    <!-- BALANCE CARD -->
-    <section class="main-balance">
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active">
+      <div class="page-content">
+        <section class="main-balance">
+          <p>Total Saldo</p>
+          <h2 id="balance">Rp 0</h2>
+        </section>
 
-      <p>Total Saldo</p>
+        <section class="summary">
+          <div class="card income">
+            <h3>Pemasukan</h3>
+            <h2 id="totalIncome">Rp 0</h2>
+          </div>
+          <div class="card expense">
+            <h3>Pengeluaran</h3>
+            <h2 id="totalExpense">Rp 0</h2>
+          </div>
+        </section>
 
-      <h2 id="balance">
-        Rp 0
-      </h2>
+        <section class="chart-card">
+          <h3>Statistik Anda</h3>
+          <canvas id="financeChart"></canvas>
+        </section>
 
-    </section>
+        <section class="filter-section">
+          <div class="filter-row">
+            <select id="categoryFilter" class="filter-select">
+              <option value="">Semua Kategori</option>
+              <option value="Makanan">🍔 Makanan</option>
+              <option value="Transportasi">🚗 Transportasi</option>
+              <option value="Belanja">🛍️ Belanja</option>
+              <option value="Tagihan">📄 Tagihan</option>
+              <option value="Gaji">💼 Gaji</option>
+              <option value="Hiburan">🎮 Hiburan</option>
+            </select>
+            <select id="sortBy" class="filter-select">
+              <option value="date-desc">Terbaru</option>
+              <option value="date-asc">Terlama</option>
+              <option value="amount-desc">Jumlah Terbesar</option>
+              <option value="amount-asc">Jumlah Terkecil</option>
+            </select>
+          </div>
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari transaksi...">
+        </section>
 
-    <!-- SUMMARY -->
-    <section class="summary">
-
-      <div class="card income">
-
-        <h3>Pemasukan</h3>
-
-        <h2 id="totalIncome">
-          Rp 0
-        </h2>
-
+        <section class="transaction-section">
+          <div class="section-header">
+            <h2>Riwayat Transaksi</h2>
+            <span class="transaction-count" id="transactionCount">0 transaksi</span>
+          </div>
+          <div id="transactionList" class="transaction-list"></div>
+          <div id="emptyState" class="empty-state" style="display:none;">
+            <p>📭 Belum ada transaksi</p>
+          </div>
+        </section>
       </div>
+    </div>
 
-      <div class="card expense">
+    <!-- CHART PAGE -->
+    <div id="chartPage" class="page">
+      <div class="page-content">
+        <div class="section-header">
+          <h2>📊 Analisis Keuangan</h2>
+        </div>
 
-        <h3>Pengeluaran</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <p>Total Pemasukan</p>
+            <h3 id="statTotalIncome">Rp 0</h3>
+          </div>
+          <div class="stat-card">
+            <p>Total Pengeluaran</p>
+            <h3 id="statTotalExpense">Rp 0</h3>
+          </div>
+          <div class="stat-card">
+            <p>Rata-rata</p>
+            <h3 id="statAverage">Rp 0</h3>
+          </div>
+          <div class="stat-card">
+            <p>Terbesar</p>
+            <h3 id="statBiggest">Rp 0</h3>
+          </div>
+        </div>
 
-        <h2 id="totalExpense">
-          Rp 0
-        </h2>
+        <section class="chart-card">
+          <h3>Pemasukan vs Pengeluaran</h3>
+          <canvas id="chartIncome"></canvas>
+        </section>
 
+        <section class="chart-card">
+          <h3>Pengeluaran per Kategori</h3>
+          <canvas id="chartCategory"></canvas>
+        </section>
+
+        <section class="chart-card">
+          <h3>Tren Bulanan</h3>
+          <canvas id="chartTrend"></canvas>
+        </section>
       </div>
+    </div>
 
-    </section>
+    <!-- MONEY PAGE -->
+    <div id="moneyPage" class="page">
+      <div class="page-content">
+        <div class="section-header">
+          <h2>💰 Manajemen Anggaran</h2>
+        </div>
 
-    <!-- CHART -->
-    <section class="chart-card">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="budget">Budget Kategori</button>
+          <button class="tab-btn" data-tab="transactions">Transaksi Detail</button>
+        </div>
 
-      <div class="title-row">
+        <div id="budgetTab" class="tab-content active">
+          <div id="budgetList" class="budget-list"></div>
+          <button class="add-btn" onclick="showAddBudgetModal()">+ Tambah Budget</button>
+        </div>
 
-        <h2>Statistik</h2>
-
+        <div id="transactionsTab" class="tab-content">
+          <div id="detailTransactionList" class="transaction-list"></div>
+        </div>
       </div>
+    </div>
 
-      <canvas id="financeChart"></canvas>
+    <!-- SETTING PAGE -->
+    <div id="settingPage" class="page">
+      <div class="page-content">
+        <div class="section-header">
+          <h2>⚙️ Pengaturan</h2>
+        </div>
 
-    </section>
+        <div class="settings-container">
+          <!-- Profile Section -->
+          <div class="setting-section">
+            <h3>👤 Profil</h3>
+            <div class="setting-item">
+              <label>Nama Pengguna</label>
+              <div class="input-group-setting">
+                <input type="text" id="settingName" class="setting-input" placeholder="Nama Anda">
+                <button onclick="saveName()" class="save-btn">Simpan</button>
+              </div>
+            </div>
+          </div>
 
-    <!-- SEARCH -->
-    <section class="search-box">
+          <!-- Theme Section -->
+          <div class="setting-section">
+            <h3>🎨 Tampilan</h3>
+            <div class="setting-item">
+              <label>Mode Tema</label>
+              <div class="theme-buttons">
+                <button class="theme-btn" id="darkThemeBtn" onclick="setTheme('dark')">🌙 Gelap</button>
+                <button class="theme-btn" id="lightThemeBtn" onclick="setTheme('light')">☀️ Terang</button>
+              </div>
+            </div>
+          </div>
 
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Cari transaksi...">
+          <!-- Data Section -->
+          <div class="setting-section">
+            <h3>💾 Data</h3>
+            <div class="setting-item">
+              <button onclick="exportDataJSON()" class="action-btn">📥 Ekspor JSON</button>
+              <button onclick="document.getElementById('importInput').click()" class="action-btn">📤 Impor JSON</button>
+              <input type="file" id="importInput" accept=".json" style="display:none;">
+              <button onclick="exportPDF()" class="action-btn">📄 Unduh PDF</button>
+              <button onclick="clearAllData()" class="action-btn danger">🗑️ Hapus Semua</button>
+            </div>
+          </div>
 
-    </section>
-
-    <!-- TRANSACTION -->
-    <section class="transaction-section">
-
-      <div class="title-row">
-
-        <h2>Riwayat Transaksi</h2>
-
+          <p class="version-text">Financial App v2.0 - Made with ❤️</p>
+        </div>
       </div>
-
-      <div id="transactionList"
-           class="transaction-list">
-
-      </div>
-
-    </section>
+    </div>
 
   </div>
 
   <!-- FLOATING BUTTON -->
-  <button class="floating-btn"
-          onclick="openModal()">
+  <button class="floating-btn" onclick="openModal()">➕</button>
 
-    ＋
-
-  </button>
-
-  <!-- MODAL -->
+  <!-- MODAL FORM -->
   <div class="modal" id="modal">
-
     <div class="modal-content">
-
       <div class="modal-header">
-
-        <h2>Tambah Transaksi</h2>
-
-        <button class="close-btn"
-                onclick="closeModal()">
-          ✕
-        </button>
-
+        <h2 id="modalTitle">Tambah Transaksi</h2>
+        <button class="close-btn" onclick="closeModal()">✕</button>
       </div>
-
       <form id="transactionForm">
-
         <div class="input-group">
-
           <label>Keterangan</label>
-
-          <input type="text"
-                 id="description"
-                 required>
-
+          <input type="text" id="description" required>
         </div>
-
         <div class="input-group">
-
           <label>Jumlah</label>
-
-          <input type="number"
-                 id="amount"
-                 required>
-
+          <input type="number" id="amount" min="0" step="0.01" required>
         </div>
-
         <div class="input-group">
-
           <label>Kategori</label>
-
           <select id="category">
-
             <option>Makanan</option>
             <option>Transportasi</option>
             <option>Belanja</option>
             <option>Tagihan</option>
             <option>Gaji</option>
             <option>Hiburan</option>
-
           </select>
-
         </div>
-
         <div class="input-group">
-
           <label>Tipe</label>
-
           <select id="type">
-
-            <option value="income">
-              Pemasukan
-            </option>
-
-            <option value="expense">
-              Pengeluaran
-            </option>
-
+            <option value="income">Pemasukan</option>
+            <option value="expense">Pengeluaran</option>
           </select>
-
         </div>
-
-        <button type="submit"
-                class="save-btn">
-
-          Simpan Transaksi
-
-        </button>
-
+        <div class="input-group">
+          <label>Tanggal</label>
+          <input type="date" id="transactionDate" required>
+        </div>
+        <button type="submit" class="save-btn">Simpan Transaksi</button>
       </form>
-
     </div>
-
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- BUDGET MODAL -->
+  <div class="modal" id="budgetModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="budgetModalTitle">Tambah Budget</h2>
+        <button class="close-btn" onclick="closeBudgetModal()">✕</button>
+      </div>
+      <form id="budgetForm">
+        <div class="input-group">
+          <label>Kategori</label>
+          <select id="budgetCategory">
+            <option>Makanan</option>
+            <option>Transportasi</option>
+            <option>Belanja</option>
+            <option>Tagihan</option>
+            <option>Hiburan</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Jumlah Budget (per bulan)</label>
+          <input type="number" id="budgetAmount" min="0" step="0.01" required>
+        </div>
+        <button type="submit" class="save-btn">Simpan Budget</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
-
-    <button class="nav-item active">
-      🏠
-      <span>Home</span>
+    <button class="nav-item active" data-page="homePage">
+      🏠<span>Home</span>
     </button>
-
-    <button class="nav-item">
-      📊
-      <span>Chart</span>
+    <button class="nav-item" data-page="chartPage">
+      📊<span>Chart</span>
     </button>
-
-    <button class="nav-item">
-      💰
-      <span>Money</span>
+    <button class="nav-item" data-page="moneyPage">
+      💰<span>Money</span>
     </button>
-
-    <button class="nav-item">
-      ⚙️
-      <span>Setting</span>
+    <button class="nav-item" data-page="settingPage">
+      ⚙️<span>Setting</span>
     </button>
-
   </nav>
 
-<script src="js/storage.js"></script>
-<script src="js/transaction.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/app.js"></script>
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/transaction.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/budget.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>
